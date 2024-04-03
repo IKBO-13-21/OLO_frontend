@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/react-first-app.iml" filepath="$PROJECT_DIR$/.idea/react-first-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/OLO_frontend.iml" filepath="$PROJECT_DIR$/.idea/OLO_frontend.iml" />
     </modules>
   </component>
 </project>
