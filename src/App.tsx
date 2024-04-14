@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {Button, Form, FormProps, Input} from "antd";
-import {Navigate} from "react-router-dom";
 import axios from "axios";
 
 interface AppProps {}
@@ -16,7 +14,7 @@ type FieldType = {
   password?: string;
 };
 
-const baseURL = "http://localhost:5070";
+const baseURL = "http://olo.testerdev.ru";
 
 class App extends React.Component<AppProps, AppState> {
 
@@ -26,9 +24,9 @@ class App extends React.Component<AppProps, AppState> {
 
   render() {
     //const [redirect, setRedirect] = useState<boolean>(false);
-    const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    const onFinish: FormProps<FieldType>["onFinish"] = async (values: any) => {
       console.log(values);
-      await axios.post(`${baseURL}/sso/v2/auth/register`, values)
+      await axios.post(`${baseURL}/api/auth/register`, values)
           .then((response) => {
               console.log(response);
           })
@@ -38,7 +36,7 @@ class App extends React.Component<AppProps, AppState> {
       //setRedirect(true);
     };
 
-    const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
+    const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo: any) => {
       console.log('Failed:', errorInfo);
     };
 
