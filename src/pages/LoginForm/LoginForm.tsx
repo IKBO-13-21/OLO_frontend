@@ -1,12 +1,32 @@
-import React, { FC, useContext, useState } from "react";
-import { Button, Card, Flex, Input } from "antd";
+import React, { FC, useContext, useEffect, useState } from "react";
+import { Button, Card, Flex, Form, FormProps, Input, message } from "antd";
 import Title from "antd/lib/typography/Title";
 import { Context } from "../../index";
+import { observer } from "mobx-react-lite";
+import { Link, redirect, useNavigate } from "react-router-dom";
+import useRedirectAuth from "../../hooks/useRedirectAuth";
+
+interface IFieldType {
+  email: string;
+  password: string;
+}
 
 const LoginForm: FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  useRedirectAuth();
   const { store } = useContext(Context);
+  const navigate = useNavigate();
+
+  const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
+    store.login(values.email, values.password);
+  };
+
+  if (store.isAuthenticated) {
+    navigate("/");
+  }
+
+  if (!store.isConfirmAuthenticated) {
+    message.error("Ошибка ввода логина или пароля");
+  }
 
   return (
     <Flex justify="center" align="center" style={{ minHeight: "100vh" }}>
@@ -15,42 +35,69 @@ const LoginForm: FC = () => {
           Вход
         </Title>
         <Flex
-          gap={20}
           vertical
           style={{
             width: "100%",
           }}
         >
-          <Input
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            type="email"
-            placeholder="E-mail"
-          />
-          <Input
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            type="password"
-            placeholder="Password"
-          />
+          <Form
+            name="login"
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 19 }}
+            style={{ width: "100%", marginBottom: 0 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            autoComplete="off"
+          >
+            <Form.Item<IFieldType>
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: "Введите email" }]}
+            >
+              <Input type="email" />
+            </Form.Item>
 
-          <Button
-            onClick={() => store.login(email, password)}
-            type="primary"
-            size={"middle"}
-          >
-            Войти
-          </Button>
-          <Button
-            onClick={() => store.registration(email, password)}
-            size={"middle"}
-          >
-            Зарегистрироваться
-          </Button>
+            <Form.Item<IFieldType>
+              label="Пароль"
+              hasFeedback
+              validateTrigger="onBlur"
+              name="password"
+              validateDebounce={1000}
+              rules={[
+                {
+                  required: true,
+                  message: "Пароль должен содержать 8 символов",
+                  min: 8,
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ flex: 1 }}>
+              <Flex vertical gap={15}>
+                <Button
+                  style={{ margin: "auto" }}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Войти
+                </Button>
+                <Link
+                  to={"/registration"}
+                  style={{
+                    margin: "auto",
+                  }}
+                >
+                  <Button>Зарегистрироваться</Button>
+                </Link>
+              </Flex>
+            </Form.Item>
+          </Form>
         </Flex>
       </Card>
     </Flex>
   );
 };
 
-export default LoginForm;
+export default observer(LoginForm);
