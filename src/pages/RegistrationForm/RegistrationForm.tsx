@@ -24,6 +24,7 @@ const RegistrationForm = () => {
     try {
       await store.registration(values.email, values.password);
       navigate("/login");
+      message.success("Регистрация успешна");
     } catch (e) {
       message.error("Возникла ошибка");
     }
