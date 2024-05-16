@@ -9,8 +9,9 @@ export default class AuthService {
   static async login(
     email: string,
     password: string,
+    app_id: number,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return $api.post<AuthResponse>("/api/auth/login", { email, password });
+    return $api.post<AuthResponse>("/api/auth/login", { email, password, app_id });
   }
 
   static async register(
