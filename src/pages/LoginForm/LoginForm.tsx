@@ -18,15 +18,12 @@ const LoginForm: FC = () => {
 
   const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
     store.login(values.email, values.password);
+    navigate("/profile");
+
+    if (!store.isConfirmAuthenticated) {
+      message.error("Ошибка ввода логина или пароля");
+    }
   };
-
-  if (store.isAuthenticated) {
-    navigate("/");
-  }
-
-  if (!store.isConfirmAuthenticated) {
-    message.error("Ошибка ввода логина или пароля");
-  }
 
   return (
     <Flex justify="center" align="center" style={{ minHeight: "100vh" }}>
